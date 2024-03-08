@@ -16,7 +16,6 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CC) $^ -o $@
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c | $(BUILD_DIR)
-	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR):
