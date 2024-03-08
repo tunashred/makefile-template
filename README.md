@@ -41,13 +41,13 @@ DEPS := $(OBJS:.o=.d)  # Dependency files
 
 ## Build
 The building process is divided in 3 steps:
-1. Creating the build directory
+1. **Creating the build directory**:
 ```
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 ```
 
-2. Generating objects and dependency files:
+2. **Generating objects and dependency files**:
 ```
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -56,6 +56,7 @@ The first line reads as follows: For each ```.o``` file located in ```BUILD_DIR`
 The pipe **'|'** symbol indicates that it is an order-only prerequisite, meaning it ensures it's existence. Though, it does not trigger a rebuild if the build directory's timestamp changes.
 
 In the second line, two automatic variables are used to ensure build versatility.
+
 ```$<```: first dependency(```$(SOURCE_DIR/%.c)```)
 
 ```$@```: target(```$(BUILD_DIR)/%.o```)
@@ -66,5 +67,27 @@ Explicit example:
 	gcc -I ./src -MMD -MP -c ./src/main.c -o ./build/main.o
 ```
 
-3. Linking objects into executable:
+3. **Linking objects into executable**:
 
+```
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CC) $^ -o $@
+```
+```$^```: all dependencies(```$(OBJS)```)
+
+## Clean phony
+```
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_DIR)
+```
+
+Calling ```make clean``` will remove the build directory and it's contents.
+
+## Include dependencies
+Using the ```include``` directive at the end of the makefile, ensures the dependencies are added after the defition of rules and variables. Putting a ```-``` in front will supress errors caused by dependencies which cannot be included for any reason or they are missing.
+
+Notes: commands may be supressed from being printed in stdin by adding ```@``` in front.
+Example:
+
+```@mkdir -p $(BUILD_DIR)```
