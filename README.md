@@ -87,7 +87,8 @@ Calling ```make clean``` will remove the build directory and it's contents.
 ## Include dependencies
 Using the ```include``` directive at the end of the makefile, ensures the dependencies are added after the defition of rules and variables. Putting a ```-``` in front will supress errors caused by dependencies which cannot be included for any reason or they are missing.
 
-Notes: commands may be supressed from being printed in stdin by adding ```@``` in front.
-Example:
+## Notes
+Commands may be supressed from being printed in stdin by adding ```@``` in front.
 
+Example:
 ```@mkdir -p $(BUILD_DIR)```
