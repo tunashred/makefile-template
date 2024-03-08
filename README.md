@@ -21,6 +21,7 @@ CFLAGS := $(INCLUDE_FLAGS) -MMD -MP
 ```addprefix```: is a makefile function which simply concatenates a prefix to a list of words. In this case, the ```-I``` flag prefixes the ```include/``` directory path.
 
 ```-MMD```: tells the compiler to generate dependency files for each source file.
+
 ```-MP```: used in combination with ```-MMD```, by adding dummy phony targets for each dependency other than the main file. It ensures Make does not encounter errors when headers are renamed or deleted.
 
 ```
@@ -37,3 +38,33 @@ DEPS := $(OBJS:.o=.d)  # Dependency files
 ```patsubst```(pattern substitution): is used to get each source file from ```$(SRCS)``` list and create a list of paths for object files located in ```$(BUILD_DIR)```.
 
 ```OBJS:.o=.d```: using this Make specific initialization syntax, for each file path we are replacing the ```.o``` extension with ```.d```.
+
+## Build
+The building process is divided in 3 steps:
+1. Creating the build directory
+```
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+```
+
+2. Generating objects and dependency files:
+```
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+```
+The first line reads as follows: For each ```.o``` file located in ```BUILD_DIR```, which depends on it's corresponding ```.c``` file, do something only if ```BUILD_DIR``` exists.
+The pipe **'|'** symbol indicates that it is an order-only prerequisite, meaning it ensures it's existence. Though, it does not trigger a rebuild if the build directory's timestamp changes.
+
+In the second line, two automatic variables are used to ensure build versatility.
+```$<```: first dependency(```$(SOURCE_DIR/%.c)```)
+
+```$@```: target(```$(BUILD_DIR)/%.o```)
+
+Explicit example:
+```
+./build/main.o: ./src/main.c | ./build
+	gcc -I ./src -MMD -MP -c ./src/main.c -o ./build/main.o
+```
+
+3. Linking objects into executable:
+
