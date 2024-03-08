@@ -11,7 +11,6 @@ CFLAGS := $(INCLUDE_FLAGS) -MMD -MP
 SRCS := $(wildcard $(SOURCE_DIR)/*.c)
 OBJS := $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 DEPS := $(OBJS:.o=.d)
-OBJ_DIRS := $(basename $(OBJS))
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CC) $^ -o $@
