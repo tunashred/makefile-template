@@ -28,11 +28,12 @@ CFLAGS := $(INCLUDE_FLAGS) -MMD -MP
 SRCS := $(wildcard $(SOURCE_DIR)/*.c)
 OBJS := $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 DEPS := $(OBJS:.o=.d)  # Dependency files
-OBJ_DIRS := $(basename $(OBJS))
 ```
-```wildcard``` is a makefile function which is used to find files matching a pattern. Reasons to use it over the ```find``` command in shell:
-1. Portable: being native to Make, it is widely supported across Make.
-2. Performance: ```wildcard``` tends to be faster than ```find```(which counts as an external command). May become more noticeable as the complexity of build process increases.
-3. Error prevention: If ```wildcard``` finds no matches, then it returns an empty string. So, this can be handled properly by displaying a message and skipping the compilation process entirely.
+```wildcard```: is a makefile function which is used to find files matching a pattern. Reasons to use it over the ```find``` command in shell:
+1. **Portable**: being native to Make, it is widely supported across Make.
+2. **Performance**: ```wildcard``` tends to be faster than ```find```(which counts as an external command). May become more noticeable as the complexity of build process increases.
+3. **Error prevention**: If ```wildcard``` finds no matches, then it returns an empty string. So, this can be handled properly by displaying a message and skipping the compilation process entirely.
 
+```patsubst```(pattern substitution): is used to get each source file from ```$(SRCS)``` list and create a list of paths for object files located in ```$(BUILD_DIR)```.
 
+```OBJS:.o=.d```: using this Make specific initialization syntax, for each file path we are replacing the ```.o``` extension with ```.d```.
